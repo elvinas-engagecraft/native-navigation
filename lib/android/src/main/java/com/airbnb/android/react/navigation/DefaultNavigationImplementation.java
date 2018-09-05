@@ -517,6 +517,7 @@ public class DefaultNavigationImplementation implements NavigationImplementation
       }
     }
     if (stringHasChanged("rightTitle", prev, next)) {
+      menu.clear();
       if (next.hasKey("rightTitle")) {
         String rightTitle = next.getString("rightTitle");
         MenuItem item = menu.add(rightTitle);
