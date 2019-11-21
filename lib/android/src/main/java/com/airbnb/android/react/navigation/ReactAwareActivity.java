@@ -34,7 +34,7 @@ public abstract class ReactAwareActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().onHostDestroy(this);
-        super.onDestroy()
+        super.onDestroy();
     }
 
     @Override
