@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.ViewTreeObserver;
 
-import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionAwareActivity;
@@ -18,22 +17,24 @@ public abstract class ReactAwareActivity extends AppCompatActivity
 
     private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
 
-    ReactNavigationCoordinator reactNavigationCoordinator = ReactNavigationCoordinator.sharedInstance;
-
-    ReactInstanceManager reactInstanceManager = reactNavigationCoordinator.getReactInstanceManager();
-
     @Nullable private PermissionListener mPermissionListener;
 
     @Override
     protected void onPause() {
-        reactInstanceManager.onHostPause(this);
+        ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().onHostPause(this);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        reactInstanceManager.onHostResume(this, this);
+        ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().onHostResume(this, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().onHostDestroy(this);
+        super.onDestroy()
     }
 
     @Override
@@ -66,27 +67,27 @@ public abstract class ReactAwareActivity extends AppCompatActivity
     }
 
     boolean isSuccessfullyInitialized() {
-        return reactNavigationCoordinator.isSuccessfullyInitialized();
+        return ReactNavigationCoordinator.sharedInstance.isSuccessfullyInitialized();
     }
 
     NavigationImplementation getImplementation() {
-        return reactNavigationCoordinator.getImplementation();
+        return ReactNavigationCoordinator.sharedInstance.getImplementation();
     }
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (/* BuildConfig.DEBUG && */keyCode == KeyEvent.KEYCODE_MENU) {
             // TODO(lmr): disable this in prod
-            reactInstanceManager.getDevSupportManager().showDevOptionsDialog();
+            ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().getDevSupportManager().showDevOptionsDialog();
             return true;
         }
         if (keyCode == 0) { // this is the "backtick"
             // TODO(lmr): disable this in prod
-            reactInstanceManager.getDevSupportManager().showDevOptionsDialog();
+            ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().getDevSupportManager().showDevOptionsDialog();
             return true;
         }
         if (mDoubleTapReloadRecognizer.didDoubleTapR(keyCode, getCurrentFocus())) {
-            reactInstanceManager.getDevSupportManager().handleReloadJS();
+            ReactNavigationCoordinator.sharedInstance.getReactInstanceManager().getDevSupportManager().handleReloadJS();
         }
 
         return super.onKeyUp(keyCode, event);
