@@ -69,11 +69,6 @@
     "semantic-release": "^15.13.3",
     "validate-commit-msg": "^2.14.0"
   },
-  "rnpm": {
-    "android": {
-      "sourceDir": "./lib/android"
-    }
-  },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
